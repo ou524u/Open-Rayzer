@@ -95,4 +95,4 @@ torchrun --nproc_per_node 8 --nnodes 1 --rdzv_id 18640 --rdzv_backend c10d --rdz
 
 Our implementation builds upon [LVSM](https://github.com/haian-jin/LVSM) and [Less3Depend](https://github.com/ou524u/Less3Depend). We also thank to author of [Long-LRM](https://github.com/QQMiger/Long-LRM) for providing DL3DV preprocessing scripts, and [Pi3](https://github.com/yyfz/Pi3) for their elegant codes.
 
-If you are interested in how LVSM-stream methods develope and achieve success, we recommend a unique perspective in our paper **The Less You Depend, The More You Learn: Synthesizing Novel Views from Sparse, Unposed Images without Any 3D Knowledge**.
+If you are interested in how LVSM-stream methods developed and achieve success, we recommend a unique perspective in our paper **The Less You Depend, The More You Learn: Synthesizing Novel Views from Sparse, Unposed Images without Any 3D Knowledge**.
