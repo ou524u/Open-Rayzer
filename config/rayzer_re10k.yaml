@@ -1,0 +1,114 @@
+parameters:
+# parameters for rayzer on re10k dataset. we followed official train/test split from PixelSplat paper.
+  model:
+    class_name: src.model.rayzer.rayzer
+
+    image_tokenizer: # Some legacy
+      image_size: 256
+      patch_size: 16
+      mode: 'linear' # NOTE: could be 'linear' or 'dinov3'
+      # d_model: 768
+      # out_channels: 9  # 3 RGB + 3 direction + 3 Reference
+      
+    tokenizer:
+      image_size: 256
+      patch_size: 16
+      d_model: 768
+      out_channels: 3 # RGB
+
+    transformer:
+      d: 768
+      d_head: 64
+      # n_layer: 24
+      special_init: true
+      depth_init: true
+      use_qk_norm: true
+      n_latent_vectors: 512 # best practice from LVSM
+
+      # rope
+      rope: true
+      rope_freq: 100
+
+      # vggstyle
+      vggstyle: true
+
+      # depths
+      estimator_depth: 8 # aligned with rayzer paper
+      encoder_depth: 8 # aligned with rayzer paper
+      decoder_depth: 8 # aligned with rayzer paper
+    
+  unposed:
+    decoder_as_canonical: false
+    pose_enc_type: "Mat4x4"
+    predict_fov: true
+    fusion_strategy: "pixel_fuse" # could be also feature_fuse
+
+  training:
+    amp_dtype: bf16
+    # api_key_path: ./configs/api_keys.yaml
+    batch_size_per_gpu: 16
+    beta1: 0.9
+    beta2: 0.95
+    allowed_gradnorm_factor: 5
+    center_crop: true
+    scene_scale_factor: 1.35
+    checkpoint_dir: ./logs/rayzer_re10k
+    dataset_name: src.data.dataset_scene.Dataset
+    dataset_path: ./datasets/re10k-full_processed/train/full_list.txt
+    eval_dataset_path: ./datasets/re10k-full_processed/test/full_list.txt
+    grad_accum_steps: 1
+    grad_checkpoint_every: 1
+    grad_clip_norm: 1.0
+
+    l2_loss_weight: 1.0
+    lpips_loss_weight: 0.0
+    perceptual_loss_weight: 0.2 # aligned with rayzer paper
+
+    lr: 0.0004
+    train_steps: 50000 # aligned with rayzer paper
+
+    # view selection
+    num_input_views: 5 # aligned with rayzer paper
+    num_target_views: 5
+    num_threads: 8
+    num_views: 10
+    num_workers: 4
+    prefetch_factor: 32
+
+
+    square_crop: true
+    target_has_input: true 
+    use_amp: true
+    use_rel_pose: false
+    use_tf32: true
+    view_selector:
+      max_frame_dist: 192
+      min_frame_dist: 128
+
+    # *_every settings
+    print_every: 100
+    vis_every: 2000
+    wandb_log_every: 100
+    eval_every: 2000
+    eval_vis_batch: 8 # visualize 8 batches of eval results every eval step
+    checkpoint_every: 2000
+    
+    wandb_exp_name: rayzer_re10k
+    wandb_project: lvsm
+    warmup: 3000
+    weight_decay: 0.05
+
+
+  # inference / evaluation
+  inference:
+    if_inference: False
+    compute_metrics: False
+    # view_idx_file_path: ./assets/evaluation_index_re10k.json
+    render_video: False
+    render_video_config:
+      traj_type: interpolate
+      num_frames: 60
+      loop_video: True 
+      order_poses: False
+
+    
