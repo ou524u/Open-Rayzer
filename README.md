@@ -2,7 +2,7 @@
 
 This repository contains a open-source Self-Reimplemented Version of the paper **"RayZer: A Self-supervised Large View Synthesis Model"**. For official implementation, please refer to [RayZer](https://github.com/hwjiang1510/RayZer) repository. 
 
-Our current version remains under active development. As the reproduced results have not yet matched those reported in paper, we welcome any feedback, comments, and contributions from the community.
+Our current version remains under active development. As the reproduced results have not yet matched numbers reported in paper, we welcome any feedback, comments, and contributions from the community.
 
 
 ---
