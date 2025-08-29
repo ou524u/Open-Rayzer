@@ -89,7 +89,7 @@ torchrun --nproc_per_node 8 --nnodes 1 --rdzv_id 18640 --rdzv_backend c10d --rdz
 
 - **Positional encoding**: Both 2D-RoPE and VGGT-style attention yield consistent improvements. These can be enabled in the configuration via `rope: True` and `vggstyle: True`.  
 - **Token fusion**: For fusing feature tokens $f_A$ and $r_A$, pixel-level alignment achieves superior results compared to MLP-based feature fusion. This can be enabled by setting `fusion_strategy: "pixel_fuse"`.  
-
+- **Image patchfier**: Using pretrained dinov3 as image patchfier yields inferior results than a simple linear layer, which is consistent with the paper. This can be enabled by setting `image_patchfier: "dinov3"` in the config.
 
 ## 📄 Acknowledgments
 
