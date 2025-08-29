@@ -79,6 +79,10 @@ torchrun --nproc_per_node 8 --nnodes 1 --rdzv_id 18640 --rdzv_backend c10d --rdz
 - **visualization on re10k**:
 ![re10k](assets/eval_supervision_batch_07_00006404_00002126-2.jpg)
 
+- **visualization on dl3dv**:
+![dl3dv](assets/eval_supervision_batch_02_00000149_00000197.jpg)
+![dl3dv](assets/eval_supervision_batch_03_00000187_00000231.jpg)
+
 ## 5. Disscussion
 
 ### Existing deviations from the paper
