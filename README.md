@@ -76,6 +76,9 @@ torchrun --nproc_per_node 8 --nnodes 1 --rdzv_id 18640 --rdzv_backend c10d --rdz
 | Rayzer (ours)  | 0.768                  | 24.30       | 0.212       | 0.562                  | 20.84       | 0.354       |
 | Rayzer (paper) | 0.835                  | 26.32       | 0.164       | 0.733                  | 23.72       | 0.222       |
 
+- **visulization on re10k**:
+![re10k](assets/eval_supervision_batch_07_00006404_00002126-2.jpg)
+
 ## 5. Disscussion
 
 ### Existing deviations from the paper
