@@ -9,25 +9,98 @@ import json
 import torch.nn.functional as F
 
 
+# NOTE: let's pass something like:
+# training:
+#   dataset_path:
+#     - ./datasets/re10k-full_processed/train/full_list.txt
+#     - ./datasets/acid-full_processed/train/full_list.txt
+#   eval_dataset_path:
+#     - ./datasets/re10k-full_processed/test/full_list.txt
+#     - ./datasets/acid-full_processed/test/full_list.txt
+def _normalize_path_list(path_or_paths):
+    """
+    Normalize different path specifications into a flat list of valid .txt files.
+    Supported input formats:
+    - Single string: 'a.txt'
+      - Comma separated: 'a.txt, b.txt'
+      - Directory: '/path/to/dir'  -> expands to dir/*.txt
+      - Glob pattern: './datasets/*/train/full_list.txt'
+    - List or tuple: ['a.txt', 'b.txt', '/some/dir', './glob/*.txt']
+    """
+    if path_or_paths is None:
+        return []
+
+    def expand_one(p):
+        p = os.path.expandvars(os.path.expanduser(str(p).strip()))
+        if not p:
+            return []
+        # Directory -> all .txt files in it (non-recursive; for recursive use **/*.txt with recursive=True)
+        if os.path.isdir(p):
+            return sorted(glob.glob(os.path.join(p, '*.txt')))
+        # Glob pattern
+        if any(ch in p for ch in '*?[]'):
+            return sorted(glob.glob(p))
+        # Normal file path
+        return [p]
+
+    paths = []
+    if isinstance(path_or_paths, (list, tuple)):
+        candidates = path_or_paths
+    elif isinstance(path_or_paths, str):
+        # Support comma separated string
+        if ',' in path_or_paths:
+            candidates = [s for s in path_or_paths.split(',')]
+        else:
+            candidates = [path_or_paths]
+    else:
+        raise TypeError(f"dataset path must be str or list, got {type(path_or_paths)}")
+
+    for c in candidates:
+        paths.extend(expand_one(c))
+
+    # Keep only existing .txt files
+    paths = [p for p in paths if os.path.isfile(p) and p.lower().endswith('.txt')]
+    # Deduplicate while preserving order
+    seen = set()
+    paths = [p for p in paths if not (p in seen or seen.add(p))]
+    return paths
+
+
 
 class Dataset(Dataset):
     def __init__(self, config, mode='train'):
         super().__init__()
         self.config = config
 
+        # Select field name
+        path_field = 'dataset_path' if mode == 'train' else 'eval_dataset_path'
+
         try:
-            if mode == 'train':
-                with open(self.config.training.dataset_path, 'r') as f:
-                    self.all_scene_paths = f.read().splitlines()
-                self.all_scene_paths = [path for path in self.all_scene_paths if path.strip()]
-            elif mode == 'eval':
-                with open(self.config.training.eval_dataset_path, 'r') as f:
-                    self.all_scene_paths = f.read().splitlines()
-                self.all_scene_paths = [path for path in self.all_scene_paths if path.strip()]
-        
-        except Exception as e:
-            print(f"Error reading dataset paths from '{self.config.training.dataset_path}'")
-            raise e
+            raw_paths = getattr(self.config.training, path_field)
+        except AttributeError:
+            raise AttributeError(f"config.training.{path_field} is missing")
+
+        # Normalize into list of .txt files
+        list_files = _normalize_path_list(raw_paths)
+        if not list_files:
+            raise FileNotFoundError(
+                f"No valid .txt files resolved from config.training.{path_field}={raw_paths!r}"
+            )
+
+        # Read all list files and merge
+        all_scene_paths = []
+        for lf in list_files:
+            try:
+                with open(lf, 'r') as f:
+                    lines = [ln.strip() for ln in f.read().splitlines()]
+                    lines = [ln for ln in lines if ln and not ln.lstrip().startswith('#')]
+                    all_scene_paths.extend(lines)
+            except Exception as e:
+                raise RuntimeError(f"Error reading list file: {lf}") from e
+
+        # Deduplicate while preserving order
+        seen = set()
+        self.all_scene_paths = [p for p in all_scene_paths if not (p in seen or seen.add(p))]
         
 
         self.inference = self.config.get("inference", {}).get("if_inference", False)
@@ -56,7 +129,11 @@ class Dataset(Dataset):
 
                     self.all_scene_paths = filtered_scene_paths
 
+        # print(f"Number of scenes: {len(self.all_scene_paths)}")
         if torch.distributed.get_rank() == 0:
+            print(f"Resolved list files ({path_field}):")
+            for lf in list_files:
+                print(f"  - {lf}")
             print(f"Number of scenes: {len(self.all_scene_paths)}")
 
 
