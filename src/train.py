@@ -75,9 +75,6 @@ eval_dataloader = DataLoader(
 )
 eval_dataloader_iter = iter(eval_dataloader)
 
-# stage_switch_step
-stage_switch_step = config.get("unposed", {}).get("stage_switch_step", 200000)
-
 total_train_steps = config.training.train_steps
 grad_accum_steps = config.training.grad_accum_steps
 total_param_update_steps = total_train_steps
@@ -212,14 +209,9 @@ while cur_train_step <= total_train_steps:
         device_type="cuda",
         dtype=amp_dtype_mapping[config.training.amp_dtype],
     ):
-        if cur_train_step <= stage_switch_step:
-            ret_dict = model(batch)
-            if ret_dict is None:
-                continue
-        else:
-            ret_dict = model(batch, from_camera=True)
-            if ret_dict is None:
-                continue
+        ret_dict = model(batch)
+        if ret_dict is None:
+            continue
 
     update_grads = (cur_train_step + 1) % grad_accum_steps == 0 or cur_train_step == total_train_steps
     if update_grads:

@@ -282,10 +282,7 @@ class rayzer(nn.Module):
 
     def forward(self, data_batch, 
                 has_target_image=True, # If true, target views will have image. This enables supervision.
-                target_has_input=False,  # NOTE: rayzer should always setting this to False.
-                from_camera=False, # some legacy shit.
-                # does_update=None, # shaped [v] This is important for cutlvsm. A list of indexes that does update latent scene tokens.
-                # does_render=None, # shaped [v] This is important for cutlvsm. A list of indexes that does render images.
+                target_has_input=False, 
             ):
         # NOTE: in rayzer model the estimator operates over all views.
         #
