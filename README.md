@@ -31,7 +31,7 @@ pip install -r requirements.txt
 
 ## 2. Dataset
 
-We use RealEstate10K dataset from [pixelSplat](https://github.com/dcharatan/pixelsplat?tab=readme-ov-file#acquiring-datasets), and followed [LVSM](https://github.com/haian-jin/LVSM) to do the preprocessing. We also pack and preprocess DL3DV dataset into pixelSplat style, and release them [here](https://huggingface.co/datasets/littlekoyo/dl3dv-960P_chunked/blob/main/dl3dv_chunked.tar). For the 2 datasets, **please ensure compliance with the respective licensing agreements when downloading**. You need to first download and unzip the `.torch` chunks. After that, process the dataset with:
+We use RealEstate10K dataset from [pixelSplat](https://github.com/dcharatan/pixelsplat?tab=readme-ov-file#acquiring-datasets), and followed [LVSM](https://github.com/haian-jin/LVSM) to do the preprocessing. We also pack and preprocess DL3DV dataset into pixelSplat style, and release them [here](https://huggingface.co/datasets/littlekoyo/dl3dv-960P_chunked/blob/main/dl3dv_chunked.tar). For the 2 datasets, **please ensure compliance with the respective licensing agreements of the original work when downloading**. You need to first download and unzip the `.torch` chunks. After that, process the dataset with:
 
 ```bash
 # process re10k training split
