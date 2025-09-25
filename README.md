@@ -12,6 +12,7 @@ Our current version remains under active development. As the reproduced results 
 - [x] Sample config files
 - [x] Config files for training on RealEstate10k and DL3DV
 - [x] Release of pre-processed DL3DV chunks (~145 GB)
+> *Note: Please do not rely on this, as it may be incomplete.*
 - [ ] Investigate and address the performance gap with the original paper
 
 ---
