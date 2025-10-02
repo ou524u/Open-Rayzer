@@ -31,7 +31,7 @@ parameters:
   training:
     amp_dtype: bf16
     # api_key_path: ./configs/api_keys.yaml
-    batch_size_per_gpu: 16
+    batch_size_per_gpu: 32
     beta1: 0.9
     beta2: 0.95
     allowed_gradnorm_factor: 5
