@@ -56,7 +56,7 @@ parameters:
     dataset_name: src.data.dataset_scene.Dataset
     dataset_path: ./datasets/re10k-full_processed/train/full_list.txt
     eval_dataset_path: ./datasets/re10k-full_processed/test/full_list.txt
-    grad_accum_steps: 1
+    grad_accum_steps: 2
     grad_checkpoint_every: 1
     grad_clip_norm: 1.0
 
