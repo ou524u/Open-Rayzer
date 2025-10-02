@@ -68,7 +68,7 @@ parameters:
       - ./datasets/dl3dv-full_processed/9K/full_list.txt
     eval_dataset_path: 
       - ./datasets/dl3dv-full_processed/10K/full_list.txt
-    grad_accum_steps: 1
+    grad_accum_steps: 4
     grad_checkpoint_every: 1
     grad_clip_norm: 1.0
 
