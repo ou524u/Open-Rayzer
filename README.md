@@ -16,7 +16,7 @@ Our current version remains under active development. As the reproduced results 
 
 ---
 
-> Update: Corrected preprocessed DL3DV dataset is now [released](https://huggingface.co/datasets/littlekoyo/dl3dv_chunked/tree/main)!
+> Update(26/01/04): Corrected preprocessed DL3DV dataset is now [released](https://huggingface.co/datasets/littlekoyo/dl3dv_chunked/tree/main)!
 
 ## 1. Environment
 
